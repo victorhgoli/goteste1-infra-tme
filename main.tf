@@ -19,6 +19,22 @@ module "vpc" {
   name_prefix = var.name_prefix
 }
 
+module "ecs" {
+  source = "./ecs"
+  name_prefix = var.name_prefix
+  vpc = module.vpc.vpc
+  subnets = module.vpc.subnets
+  ecs_cluster_name = var.ecs_cluster_name
+  certificate_arn = var.certificate_arn
+  domain_name = var.domain_name
+  subdomain_url = var.subdomain_url
+}
+
+module "task_execution_role" {
+  source = "./task-execution-role"
+  name_prefix = var.name_prefix
+}
+
 /*
 resource "aws_key_pair" "my_key_pair" {
   key_name   = "my-key-pair"  # Replace with the desired key pair name
