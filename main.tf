@@ -13,8 +13,30 @@ provider "aws" {
 
 }
 
+
+
+resource "aws_instance" "my_instance" {
+  ami           = "ami-0440d3b780d96b29d"  # Replace with the desired AMI ID
+  instance_type = "t2.micro"
+  key_name      = "my-key-pair"   # Replace with the name of your key pair
+
+  iam_instance_profile = "ecsInstanceRole" 
+
+  user_data = <<-USERDATA
+              #!/bin/bash
+              echo ECS_CLUSTER=my-ecs-cluster >> /etc/ecs/ecs.config
+              sudo docker start ecs-agent
+              USERDATA
+
+  tags = {
+    Name = "my-ecs-instance"
+  }
+}
+
 resource "aws_ecs_cluster" "my_cluster" {
   name = "my-ecs-cluster"
+
+  depends_on = [ aws_instance.my_instance ]
 }
 
 
@@ -40,23 +62,6 @@ resource "aws_ecs_task_definition" "my_task_definition" {
 DEFINITION
 }
 
-resource "aws_instance" "my_instance" {
-  ami           = "ami-0440d3b780d96b29d"  # Replace with the desired AMI ID
-  instance_type = "t2.micro"
-  key_name      = "my-key-pair"   # Replace with the name of your key pair
-
-  iam_instance_profile = "ecsInstanceRole" 
-
-  user_data = <<-USERDATA
-              #!/bin/bash
-              echo ECS_CLUSTER=my-ecs-cluster >> /etc/ecs/ecs.config
-              sudo docker start ecs-agent
-              USERDATA
-
-  tags = {
-    Name = "my-ecs-instance"
-  }
-}
 
 resource "aws_ecs_service" "my_service" {
   name            = "my-service"
