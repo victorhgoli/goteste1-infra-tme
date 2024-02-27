@@ -88,7 +88,6 @@ resource "aws_ssm_parameter" "cloudwatch_agent_config" {
   name  = "cloudwatch-agent-config"
   type  = "String"
   value = data.local_file.cloudwatch_agent_config_file.content
-  overwrite = true
   provisioner "local-exec" {
     command = "sleep 10"
   }
@@ -315,7 +314,7 @@ resource "aws_alb_target_group" "ecs_alb_target_group" {
 }
 
 resource "aws_autoscaling_attachment" "ecs_alb_autoscaling_attachment" {
-  alb_target_group_arn = aws_alb_target_group.ecs_alb_target_group.arn
+  lb_target_group_arn = aws_alb_target_group.ecs_alb_target_group.arn
   autoscaling_group_name = aws_autoscaling_group.ecs_autoscaling_group.id
 }
 
@@ -335,7 +334,7 @@ resource "aws_alb_target_group" "ecs_alb_target_group_8000" {
 }
 
 resource "aws_autoscaling_attachment" "ecs_alb_autoscaling_attachment_8000" {
-  alb_target_group_arn = aws_alb_target_group.ecs_alb_target_group_8000.arn
+  lb_target_group_arn = aws_alb_target_group.ecs_alb_target_group_8000.arn
   autoscaling_group_name = aws_autoscaling_group.ecs_autoscaling_group.id
 }
 
