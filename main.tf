@@ -50,6 +50,7 @@ resource "aws_instance" "my_instance" {
   user_data = <<-USERDATA
               #!/bin/bash
               echo ECS_CLUSTER=my-ecs-cluster >> /etc/ecs/ecs.config
+              sudo docker start ecs-agent
               USERDATA
 
   tags = {
