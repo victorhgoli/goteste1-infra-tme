@@ -221,7 +221,6 @@ data "aws_elb_service_account" "ecs_alb_service_account" {}
 
 resource "aws_s3_bucket" "ecs_alb_log_bucket" {
   bucket = "${var.name_prefix}-ecs-alb-log-bucket"
-  acl = "log-delivery-write"
   force_destroy = true
 }
 
